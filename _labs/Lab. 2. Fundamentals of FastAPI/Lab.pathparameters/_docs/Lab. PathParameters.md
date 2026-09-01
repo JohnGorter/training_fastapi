@@ -67,7 +67,7 @@ Here are the HTTPie commands for you to test:
 Make sure they are all working correctly.
 
 If you get errors and need inspiration, you can always peek at the solution file
-[../_solution/main.py]
+<a href="../_solution/main.py" />
 
 ### Extra Exercise
 Try to implement the business logic using regular Python syntax and utillities like in-memory dicts and lists. 
