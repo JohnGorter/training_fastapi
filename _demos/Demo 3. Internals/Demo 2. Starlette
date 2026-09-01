@@ -1,0 +1,99 @@
+step 1. create a new project named ASGI using: uv init --no-package starlette_demo
+step 2. add starlette to the project by using: uv add starlette
+step 3. replace the code from main.py with the following code: 
+
+```
+from starlette.routing import Route
+from starlette.responses import PlainTextResponse
+from starlette.applications import Starlette
+
+async def HelloWorld(request):
+    return PlainTextResponse('Hello, World!')
+
+app = Starlette(routes=[
+    Route('/', HelloWorld),
+])
+```
+
+step 4. explain the code and then execute the code by running uvicorn: uvicorn main:app
+
+# end of demo 1
+
+#demo 2
+
+step 5. Replace the code with the code below, note the addition of middleware now: 
+
+```
+from starlette.routing import Route
+from starlette.responses import PlainTextResponse
+from starlette.applications import Starlette
+from starlette.middleware import Middleware
+
+class LogRequest: 
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        print(f"Request: {scope['method']} {scope['path']}")
+        await self.app(scope, receive, send)
+
+class LogResponse: 
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        await self.app(scope, receive, send)
+        print(f"Response: {scope['method']} {scope['path']}")
+
+async def HelloWorld(request):
+    return PlainTextResponse('Hello, World!')
+
+app = Starlette(routes=[
+        Route('/', HelloWorld),
+    ], middleware=[
+        Middleware(LogRequest),
+        Middleware(LogResponse)
+    ])
+
+```
+
+
+step 6. explain that the middleware is actually just an ASGI application.
+step 7. run the code using uvicorn main:app and show that logging is done for each request
+step 8. rewrite the logging middleware using the basemiddleware base class from starlette.
+
+```
+from starlette.routing import Route
+from starlette.responses import PlainTextResponse
+from starlette.applications import Starlette
+from starlette.middleware import Middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+
+class LogRequest(BaseHTTPMiddleware): 
+
+    async def dispatch(self, request, call_next):
+        print(f"Request: {request.scope['method']} {request.scope['path']}")
+        return await call_next(request)
+
+class LogResponse(BaseHTTPMiddleware):
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        print(f"Response: {request.scope['method']} {request.scope['path']}")
+        return response
+
+
+async def HelloWorld(request):
+    return PlainTextResponse('Hello, World!')
+
+app = Starlette(routes=[
+        Route('/', HelloWorld),
+    ], middleware=[
+        Middleware(LogRequest),
+        Middleware(LogResponse)
+    ])
+
+```
+
+step 9. explain the code and rerun the code and show that all works fine!
+    
