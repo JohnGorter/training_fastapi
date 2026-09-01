@@ -10,15 +10,15 @@ Open a terminal to execute the following command:
 uv init --no-package hello_fastapi
 ```
 
-*note: If you are in a vpn with restricted access, use the following command to skip the certification check:*
-```
-uv add --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org "fastapi[standard]"
-```
-
 Open a terminal to execute the following command: 
 ```
 uv add "fastapi[standard]"
 uv add HTTPie
+```
+*note: If you are in a vpn with restricted access, use the following command to skip the certification check:*
+```
+uv add --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org "fastapi[standard]"
+uv add --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org "HTTPie"
 ```
 
 Make sure the command executes succesfully. If it did, your installation was succesful.
