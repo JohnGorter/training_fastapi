@@ -7,8 +7,35 @@ Navigate to your lab folder and create a new project with uv, name it pathparame
 Dont forget to add packages HTTPie, Pydantic and fastapi[standard] to your project using uv add. 
 Make sure the project is created without package (--no-package) and the main.py is empty. 
 
+These are the commands
+```
+uv init --no-package hello_fastapi
+uv add "fastapi[standard]"
+uv add Pydantic
+uv add HTTPie
+```
+
+*note: If you are in a vpn with restricted access, use the following command to skip the certification check:*
+```
+uv add --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org "fastapi[standard]"
+uv add --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org Pydantic
+uv add --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org HTTPie
+```
+
 ### Step 2. Write the fastAPI boilerplate code
 Open the main.py and write the boilerplate code to generate a fastAPI server. 
+
+Here is the code:
+```
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+async def read_root():
+    return {"Hello": "World!!"}
+```
+
 Try to run the server using
 ```
 uv run fastapi dev
