@@ -45,7 +45,7 @@ uv run fastAPI dev
 
 Make sure it runs and wait for it to start. 
 
-Inside another terminal, activate the virtual environment by using the command
+Inside another terminal, started from the root of your project, activate the virtual environment by using the command
 ```
 source .venv/bin/activate
 ```
