@@ -56,9 +56,21 @@ Make sure the ordering is correct
 
 Use HTTPie to test each individual API Call with the correct syntax.
 
+Here are the HTTPie commands for you to test:
+```
+- http localhost:8000/users/me
+- http localhost:8000/users/john
+- http localhost:8000/users/john/profile//path/to/photo.jpg
+- http localhost:8000/currentenvironment
+```
+
+Make sure they are all working correctly.
+
+If you get errors and need inspiration, you can always peek at the solution file
+[../_solution/main.py]
+
 ### Extra Exercise
 Try to implement the business logic using regular Python syntax and utillities like in-memory dicts and lists. 
-
 
 ### Summary
 We have defined and run multiple different API endpoints with different paths and options to have dynamic content!
