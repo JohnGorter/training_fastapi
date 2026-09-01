@@ -73,7 +73,7 @@ The requirements for the address class are
 - street is a string of minimal 1 and maximal 100 characters
 - city is a string of minimal 1 and maximal 50 characters
 - state is a string of exact 2 characters
-= zip_code is a dutch zip code containing of 4 digits and 2 letters possible with a space between the digits and letter-pair (use a pattern/regex for this field)
+- zip_code is a dutch zip code containing of 4 digits and 2 letters possible with a space between the digits and letter-pair (use a pattern/regex for this field)
 - country is a string of minimal 1 and maximal 50 characters
 
 Add two addresses to the user for the shipping and the billing attribute of the user: 
