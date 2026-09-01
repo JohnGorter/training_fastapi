@@ -1,4 +1,4 @@
-## Lab PathParameters
+## Lab. PathParameters
 In this lab you will make a set of API endpoints with arguments that actually resemble a real life implementation. This time we use path parameters to actually carry over data from the path to your code
 > duration: 15 minutes
 
