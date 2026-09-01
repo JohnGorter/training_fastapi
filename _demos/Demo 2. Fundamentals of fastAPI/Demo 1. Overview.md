@@ -1,4 +1,4 @@
-# Demo 1. HTTPie
+# Demo 1. Overview
 
 ### Step 1. New Project
 create a new project named demo_httpie using

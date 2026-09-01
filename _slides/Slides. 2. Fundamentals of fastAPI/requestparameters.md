@@ -76,6 +76,9 @@ Behavior
 - Pydantic models parse the raw JSON stream into typed Python objects.
 - to receive isolated JSON fields outside a model, wrapper parameters with Body(embed=True).
 
+---
+### Request Body (Body & Pydantic Models)
+
 ```
 class PaymentItem(BaseModel):
     sku: str
@@ -99,6 +102,9 @@ Real-World Use Case
 Behavior
 - HTTP header keys are case-insensitive and standardly use hyphens (X-API-Key)
 - FastAPI automatically converts Python snake_case variable names (e.g., x_api_key) to hyphenated headers (X-API-Key).
+
+---
+### Header Parameters (Header)
 
 ```
 @app.get("/analytics/metrics")
