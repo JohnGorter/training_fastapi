@@ -3,8 +3,25 @@ In this lab you will learn the basics about Pydantic. You wil create, validate, 
 > duration: 20 minutes
 
 ### Step 1. Create a new project in a working folder for your labs
-Navigate to your lab folder and create a new project with uv, name it pydantic. 
+Navigate to your lab folder and create a new project with uv, name it lab_pydantic. 
+
+```
+uv init --no-package lab_pydantic
+```
+
+Navigate to the just created folder
+```
+cd ./lab_pydantic
+```
+
 Dont forget to add packages Pydantic and Pydantic[[email]]to your project using uv add. You dont have to use FastAPI now!
+
+
+commands
+```
+uv add pydantic
+uv add "pydantic[email]"
+```
 
 Make sure the project is created without package (--no-package) and the main.py is empty. 
 
@@ -82,6 +99,7 @@ class User(BaseModel):
     # your code here
 
     created_at: datetime = Field(default_factory=datetime.now)
+
     @field_validator('password')
     @classmethod
     def validate_password(cls, value):
@@ -92,6 +110,7 @@ class User(BaseModel):
         return value
 
 print("User model defined successfully")
+
 try:
     user = User(
         firstname="John",
@@ -110,7 +129,6 @@ try:
     print(user.model_dump())
 except ValidationError as e:
     print(e)
-
 
 ```
 

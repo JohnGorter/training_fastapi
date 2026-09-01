@@ -182,7 +182,7 @@ async def add_user(user_data: Annotated[User, Depends()]): # <- more on this lat
     }
 ```
 
---- 
+---
 ### File Upload Parameters (File & UploadFile)
 Handles binary inputs sent via multipart/form-data
 

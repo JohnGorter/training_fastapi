@@ -37,7 +37,7 @@ You can specify the following response types
 
 To return plain/text, you can use the PlainTextRespone
 
-Recommended version, this also updates swagger generaated docs to have content-type text/plain!
+Recommended version, this also updates swagger generated docs to have content-type text/plain!
 ```
 @app.get("/", response_class=PlainTextResponse)
 async def main():
