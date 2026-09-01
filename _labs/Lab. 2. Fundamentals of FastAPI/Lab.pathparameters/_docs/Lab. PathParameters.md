@@ -3,13 +3,13 @@ In this lab you will make a set of API endpoints with arguments that actually re
 > duration: 15 minutes
 
 ### Step 1. Create a new project in a working folder for your labs
-Navigate to your lab folder and create a new project with uv, name it pathparameters. 
+Navigate to your lab folder and create a new project with uv, name it lab_pathparameters. 
 Dont forget to add packages HTTPie, Pydantic and fastapi[standard] to your project using uv add. 
 Make sure the project is created without package (--no-package) and the main.py is empty. 
 
 These are the commands
 ```
-uv init --no-package hello_fastapi
+uv init --no-package lab_pathparameters
 uv add "fastapi[standard]"
 uv add Pydantic
 uv add HTTPie

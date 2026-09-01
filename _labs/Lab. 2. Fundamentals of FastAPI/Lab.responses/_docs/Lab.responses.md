@@ -55,9 +55,9 @@ After changing the code, test the endpoints with HTTPie and the commands that ar
 ### Extra Exercise
 For all the endpoints that are applicable, make sure that all statuscodes that could be returned are all documented correcly in the OpenAPI specification.
 
-Here is an example
+Here is an example for the delete endpoint for inspiration
 ```
-responses={404: {"description": "User not found"}})
+@app.delete("/users/delete", ...  responses={404: {"description": "User not found"}})
 ```
 
 Check the docs for the OpenAPI status codes to see the effect of your additions.
