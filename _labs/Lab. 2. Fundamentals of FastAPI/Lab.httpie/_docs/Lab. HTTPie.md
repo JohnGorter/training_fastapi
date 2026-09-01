@@ -3,13 +3,34 @@ In this lab you will add the package HTTPie to your first demo project and use i
 > duration: 15 minutes
 
 ### Step 1. Add HTTPie package
-Navigate to your lab folder and choose one of the earlier helloworld demo fastAPI projects.
+Navigate to your lab folder and make a new folder called helloworld
+
 Open a terminal to execute the following command: 
 ```
-uv add package HTTPie
+uv init --no-package hello_fastapi
+```
+
+
+Open a terminal to execute the following command: 
+```
+uv add "fastapi[standard]"
+uv add HTTPie
 ```
 
 Make sure the command executes succesfully. If it did, your installation was succesful.
+
+Copy in this code in main.py in your root folder
+```
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+async def read_root():
+    return {"Hello": "World!!"}
+```
+
+Save the file
 
 ### Step 2. Use HTTPie
 
@@ -20,7 +41,7 @@ uv run fastAPI dev
 
 Make sure it runs and wait for it to start. 
 
-Inside the terminal, activate the virtual environment by using the command
+Inside another terminal, activate the virtual environment by using the command
 ```
 source .venv/bin/activate
 ```
@@ -38,7 +59,7 @@ If you see the usage description of the HTTPie package, then it worked.
 
 In the terminal that has the virtual environment activated, issue the following command
 ```
-http://localhost:8000/
+http localhost:8000/
 ```
 
 If all went wel, you see something similar to the following output, of course with different datetimes :D
