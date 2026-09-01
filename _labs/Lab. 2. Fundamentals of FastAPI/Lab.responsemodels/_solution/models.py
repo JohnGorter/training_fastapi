@@ -25,6 +25,7 @@ class UserProfilePhotoResult(BaseModel):
     filename: str | None = None
 
 
+# EXTRA EXERCISE
 class ChangePassword(BaseModel):
     user: EmailStr
     password: str

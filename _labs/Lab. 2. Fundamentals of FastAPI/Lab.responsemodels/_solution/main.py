@@ -32,7 +32,7 @@ async def add_profile_photo(
         return user_profile_photo.model_dump()
     return {**user_profile_photo.model_dump(), "filename": user_profile_photo.photo.filename}
 
-# 
+# EXTRA EXERCISE
 # http -f POST localhost:8000/users/changepassword user=john@test.nl password=123 new_password=123 repeat_new_password=456
 # http -f POST localhost:8000/users/changepassword user=john@test.nl password=123 new_password=456 repeat_new_password=456
 @app.post("/users/changepassword", status_code=status.HTTP_200_OK, response_model=ChangePasswordResponse)
