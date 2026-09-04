@@ -1,6 +1,6 @@
 from typing import Annotated
 from fastapi import FastAPI, Query, Body, Header, Cookie, Form, UploadFile, File, Response, status
-from models import UserInput, UserResponse, UserResponseAction, UserProfilePhoto, UserProfilePhotoResult, Login
+from models import UserInput, UserResponse, UserResponseAction, UserProfilePhoto, UserProfilePhotoResult
 
 app = FastAPI()
 

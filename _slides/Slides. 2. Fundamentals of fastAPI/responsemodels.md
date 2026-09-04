@@ -176,6 +176,82 @@ async def add_user(user: UserResponse):
 ```
 
 ---
+### Modern approach and best practice
+
+You don't have to use response_model in the last versions of FastAPI
+- use typehints
+
+
+---
+###
+
+```
+The most simple and modern approach relies on pure Python return type annotations (-> Model) combined with Pydantic v2's built-in model features.
+
+By letting type hints drive FastAPI's serialization and keeping configuration inside your Pydantic schemas, you eliminate redundant decorator parameters entirely while preserving total type safety, auto-generated OpenAPI documentation, and response filtering.
+
+The Modern Standard Pattern
+Python
+from typing import Optional
+from fastapi import FastAPI
+from pydantic import BaseModel, ConfigDict, Field
+
+app = FastAPI()
+
+# 1. Internal/Database Model (contains sensitive data)
+class UserDB(BaseModel):
+    id: int
+    username: str
+    hashed_password: str
+
+# 2. Public API Schema (configures its own serialization rules)
+class UserPublic(BaseModel):
+    id: int
+    username: str
+    bio: Optional[str] = None
+
+    # Keep serialization rules (like excluding None values) inside the model
+    model_config = ConfigDict(response_model_exclude_none=True)
+
+
+# ------------------------------------------------------------------
+# Route 1: Direct Return with Explicit Conversion
+# ------------------------------------------------------------------
+@app.get("/users/{user_id}")
+def get_user(user_id: int) -> UserPublic:
+    db_user = UserDB(id=user_id, username="alice", hashed_password="secret_hash")
+    
+    # Explicit conversion gives full IDE autocompletion & MyPy type safety
+    return UserPublic.model_validate(db_user)
+
+
+# ------------------------------------------------------------------
+# Route 2: Returning Lists or Collections
+# ------------------------------------------------------------------
+@app.get("/users")
+def list_users() -> list[UserPublic]:
+    db_users = [
+        UserDB(id=1, username="alice", hashed_password="hash1"),
+        UserDB(id=2, username="bob", hashed_password="hash2"),
+    ]
+    
+    return [UserPublic.model_validate(u) for u in db_users]
+```
+
+---
+### Why This Is Preferred Today
+
+- No Magic Decorator Parameters
+    - no response_model, response_class, or response_model_exclude_none on @app.get(...).
+- Strict Type Safety
+    - Static type checkers (MyPy, Pyright, Pylance) verify that your function actually returns
+- Decoupled Architecture
+    - Route definitions stay minimal, while data validation and serialization behavior live inside the Pydantic schemas
+- Auto-Generated Swagger/OpenAPI
+    - FastAPI automatically generates full JSON schema models in /docs directl
+
+
+---
 ### Unified Enterprise Response Workflow
 
 This production pattern demonstrates how FastAPI processes response modeling, status code assignment, header mutability, field sanitization, and sparse payload filtering during an enterprise invoice generation request

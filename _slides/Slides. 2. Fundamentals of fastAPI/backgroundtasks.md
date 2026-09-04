@@ -141,9 +141,12 @@ async def trigger_webhook(target_url: str, background_tasks: BackgroundTasks):
 ```
 
 ---
-### Architecture: In-Process BackgroundTasks vs. External Distributed Queues
+### Architecture
+
+In-Process BackgroundTasks vs. External Distributed Queues
 
 |Architectural Criteria|In-Process BackgroundTasks (FastAPI)|External Distributed Queue (Celery / ARQ / Dramatiq)|
+|---|---|---|
 |Execution Context|Runs inside the same Uvicorn/ASGI process worker|Runs in separate, dedicated worker processes/nodes|
 |Infrastructure|Zero extra setup (Built into FastAPI/Starlette)|Requires message broker (Redis/RabbitMQ) + worker management|
 |Persistence|In-memory|Persistent|
@@ -152,7 +155,10 @@ async def trigger_webhook(target_url: str, background_tasks: BackgroundTasks):
 ---
 ### Unified Enterprise Order Processing & Async Worker Pipeline
 
-This production pattern demonstrates an order ingestion service. The endpoint returns an immediate HTTP 202 Accepted response while delegating audit logging, external payment notification webhooks via httpx, and analytics metrics calculation to background tasks using an independent database session.
+The following production pattern demonstrates an order ingestion service. The endpoint returns an immediate HTTP 202 Accepted response while delegating audit logging, external payment notification webhooks via httpx, and analytics metrics calculation to background tasks using an independent database session.
+
+---
+### Unified Enterprise Order Processing & Async Worker Pipeline
 
 ```
 from contextlib import asynccontextmanager

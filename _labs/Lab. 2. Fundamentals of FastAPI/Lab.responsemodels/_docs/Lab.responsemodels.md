@@ -2,7 +2,7 @@
 In this lab you will change the previous created API endpoint to correctly validate and serialize models in your business log API endpoints.
 > duration: 30 minutes
 
-### Step 1. Copy over the previous exercise 
+### Step 1. Create a new project
 Navigate to your lab folder and create a new project with uv, name it lab_responsemodels.
 Make sure the project is created without package (--no-package) and the main.py is empty. 
 
