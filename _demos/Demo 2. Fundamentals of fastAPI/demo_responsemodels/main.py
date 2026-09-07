@@ -23,7 +23,7 @@ async def create_user(user: UserInDB):
     # Returns UserInDB object, but FastAPI strips hashed_password automatically
     return user
 
-# demo 2. dynmic field exclusion
+# demo 2. dynamic field exclusion
 # http localhost:8000/telemetry/10
 class PatientTelemetry(BaseModel):
     device_id: str

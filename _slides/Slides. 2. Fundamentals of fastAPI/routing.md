@@ -6,7 +6,7 @@
 FastAPI routing maps incoming HTTP verbs and URL paths to Python coroutines
 
 ---
-### Basic Path Operations 
+### Basic Path Operations (RECAP!)
 
 Path parameters capture variable segments directly from the URL path (/items/{item_id})
 - non-path function arguments automatically map to URL query parameters (/items?limit=10&page=1)
@@ -18,7 +18,7 @@ Behavior
 - type hints (int, str, bool) enforce automatic casting and validation. Invalid parameter types immediately trigger an HTTP 422 error
 
 ---
-### Basic Path Operations 
+### Basic Path Operations (RECAP!)
 
 ```
 from fastapi import FastAPI, Query
@@ -80,14 +80,14 @@ async def get_user_by_id(user_id: int):
 ```
 # main.py
 from fastapi import FastAPI
-# from routers.users import router as user_router
+from routers.users import router as user_router
 
 app = FastAPI()
 app.include_router(user_router)  # Routes now accessible at /users/ and /users/{user_id}
 ```
 
 ---
-### Router-Level & Endpoint Dependencies 
+### Router-Level dependencies 
 
 Dependencies can be attached at the router or path-operation level via the dependencies parameter
 
@@ -98,7 +98,7 @@ Behavior
 - dependencies declared in APIRouter(dependencies=[...]) execute sequentially before any route handler in that router runs
 
 ---
-### Router-Level & Endpoint Dependencies 
+### Router-Level dependencies 
 
 ```
 from typing import Annotated
@@ -233,18 +233,6 @@ app.include_router(comments_router)
 - Type Hint Safety & Tools
     - keeping path parameters matching function arguments explicitly in the same router reduces IDE and schema mismatch warnings.
 
----
-### Nest Routers with dynamic parts
-
-Key Patterns to Keep in Mind
-- parameter name alignment
-    - the parameter name defined in the prefix (e.g., {user_id}) must match the parameter name expected in the child route function signature (user_id: int)
-- clean modular file structure
-    - if split across files, blogs_router can be defined in routers/blogs.py without needing to import or know about users_router
-    - the parent prefix relationship is established entirely when you call users_router.include_router(...)
-- deep nesting
-    - you can chain this pattern further down 
-    - e.g., /users/{user_id}/blogs/{blog_id}/comments/{comment_id}
 
 ---
 ### Unified Enterprise Routing Architecture

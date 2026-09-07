@@ -7,10 +7,10 @@
 In this Chapter, we explore:
 - Internals
 - Static files and Templating
-- Sessions
-- Database Persistence
-- Authentication
+- Sessions V
+- Database Persistence V
+- Authentication V
 - Testing
 - Websockets
 - Deployment
-- Best Practices
+- Best Practices V

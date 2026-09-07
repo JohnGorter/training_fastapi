@@ -10,6 +10,32 @@ FastAPI’s lifespan context manager handles application startup and shutdown op
     - code following yield executes during graceful shutdown
 
 ---
+### This is the old way...
+```
+# Legacy: app.on_event (Deprecated)
+
+from fastapi import FastAPI
+
+app = FastAPI()
+
+# Startup Event
+@app.on_event("startup")
+async def startup_event():
+    print("Connecting to database...")
+    # e.g., await database.connect()
+
+# Shutdown Event
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("Disconnecting from database...")
+    # e.g., await database.disconnect()
+
+@app.get("/")
+async def read_root():
+    return {"message": "Hello World"}
+```
+
+---
 ### Basic Lifespan Anatomy 
 
 A lifespan function wraps the application lifecycle
@@ -48,9 +74,8 @@ async def health():
 ---
 ### Shared State & Dependency Storage 
 
-The lifespan function receives the app instance, allowing startup tasks to attach shared resources directly to app.state. 
-
-- routes access these resources via request.state
+The lifespan function receives the app instance, allowing startup tasks to attach shared resources directly to app.state
+- in the handler, you van get the state using request.state
 
 Real-World Use Case
 - instantiating a single HTTP client (httpx.AsyncClient) at startup to reuse TCP connections across out-of-process API requests
@@ -92,13 +117,13 @@ async def get_data(request: Request):
 Wrapping lifespan operations in a try...finally block ensures that cleanup tasks run even if an unhandled exception occurs while running the application or processing startup procedures
 
 Real-World Use Case
-- If an application component crashes, safely close
+- If an application component crashes => safely close
 - file handles
 - temporary socket connections
 - background workers 
 
 Behavior
-- i an error occurs after startup, execution jumps directly to the finally block, executing cleanup logic before process termination
+- if an error occurs after startup, execution jumps directly to the finally block, executing cleanup logic before process termination
 
 ---
 ### Exception Safety & Teardown Guarantees 
