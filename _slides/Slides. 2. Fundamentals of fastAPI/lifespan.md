@@ -106,7 +106,7 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/external-data")
 async def get_data(request: Request):
     # Retrieve the shared client instance from request.state
-    client: httpx.AsyncClient = request.state.http_client
+    client: httpx.AsyncClient = request.app.state.http_client
     response = await client.get("https://api.github.com")
     return {"status_code": response.status_code}
 ```

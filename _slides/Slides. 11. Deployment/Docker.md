@@ -19,6 +19,10 @@ Real-World Use Case
 Behavior
 - Gunicorn acts as the master process manager, monitoring worker health and restarting crashed processes, while each UvicornWorker runs an isolated asyncio event loop
 
+
+---
+### Production ASGI Execution (Gunicorn + Uvicorn Workers)
+
 ```
 # gunicorn.conf.py
 import multiprocessing
@@ -60,6 +64,10 @@ Real-World Use Case
 
 Behavior
 - proxyHeadersMiddleware inspects forwarding headers and updates the ASGI scope before request processing.
+
+
+---
+### Reverse Proxying & Trusted Headers 
 
 ```
 from fastapi import FastAPI, Request
@@ -154,6 +162,8 @@ Behavior
 - build dependencies are compiled in a temporary builder image
 - final artifacts are copied into a clean, unprivileged execution container
 
+---
+### Containerization Best Practices 
 
 Dockerfile
 ```
@@ -213,7 +223,10 @@ Liveness Probe (/healthz/live): Verifies the web server process is running. If i
 
 Readiness Probe (/healthz/ready): Verifies backend dependencies (Database, Redis, external APIs) are connected. If it fails, the orchestrator removes the pod from service load balancers until connections recover.
 
-Python
+---
+### Liveness & Readiness Health Probes
+
+```
 from typing import Annotated
 from fastapi import FastAPI, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -236,12 +249,20 @@ async def readiness_probe(response: Response, db: Annotated[AsyncSession, Depend
     except Exception:
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
         return {"status": "unready", "database": "disconnected"}
-Unified Production FastAPI Deployment Suite
+```
+
+
+---
+### Unified Production FastAPI Deployment Suite
 
 This complete suite provides a production-grade FastAPI web service featuring a Lifespan connection pool manager, Liveness/Readiness endpoints, Reverse Proxy header handling, Async Database & Redis integration, and a Gunicorn Process Configuration.
 
-app/main.py
+---
+### Unified Production FastAPI Deployment Suite
 
+
+app/main.py
+```
 Python
 from contextlib import asynccontextmanager
 from typing import Annotated, AsyncGenerator
@@ -338,9 +359,14 @@ async def get_production_data(request: Request):
         "client_ip": request.client.host,
         "scheme": request.url.scheme
     }
+```
+
+---
+### Unified Production FastAPI Deployment Suite
+
 gunicorn.conf.py (Production Process Manager Config)
 
-Python
+```
 import multiprocessing
 
 # Worker Process Pool: 2 * Cores + 1
@@ -362,16 +388,18 @@ keepalive = 65
 accesslog = "-"
 errorlog = "-"
 loglevel = "info"
-Execution Pipeline Explanation:
+```
 
-Deployment Initialization: The multi-stage Dockerfile compiles binary dependencies in a builder stage, discards build tools, copies runtime packages into a minimal Python environment, assigns ownership to an unprivileged appuser (UID 10001), and executes Gunicorn via JSON array syntax (CMD ["gunicorn", ...]).
+---
+### Execution Pipeline Explanation
 
-Process Management: Gunicorn launches master process workers (UvicornWorker). Each worker initializes Python's asyncio event loop and invokes FastAPI's lifespan handler to open async connection pools for PostgreSQL/SQLite and Redis.
-
-Reverse Proxy Ingestion: Incoming HTTPS requests terminate at Nginx or AWS ALB. The proxy injects X-Forwarded-For and X-Forwarded-Proto headers. ProxyHeadersMiddleware rewrites the ASGI scope so request.client.host reflects the actual remote client IP.
-
-Orchestrator Probing: Kubernetes continuously monitors container lifecycle state:
-
-Queries /healthz/live every 10 seconds. If workers freeze, Kubernetes restarts the pod.
-
-Queries /healthz/ready. If Redis or PostgreSQL drops connections, the endpoint returns HTTP 503, causing the ingress controller to drop the container from active traffic routing until dependencies recover.
+- Deployment Initialization
+    - multi-stage Dockerfile compiles binary dependencies in a builder stage, discards build tools, copies runtime packages into a minimal Python environment, assigns ownership to an unprivileged appuser (UID 10001), and executes Gunicorn via JSON array syntax (CMD ["gunicorn", ...]).
+- Process Management
+    - Gunicorn launches master process workers (UvicornWorker). Each worker initializes Python's asyncio event loop and invokes FastAPI's lifespan handler to open async connection pools for PostgreSQL/SQLite and Redis.
+- Reverse Proxy Ingestion
+    - Incoming HTTPS requests terminate at Nginx or AWS ALB. The proxy injects X-Forwarded-For and X-Forwarded-Proto headers. ProxyHeadersMiddleware rewrites the ASGI scope so request.client.host reflects the actual remote client IP.
+- Orchestrator Probing
+    - Kubernetes continuously monitors container lifecycle state
+    - Queries /healthz/live every 10 seconds. If workers freeze, Kubernetes restarts the pod
+    - Queries /healthz/ready. If Redis or PostgreSQL drops connections, the endpoint returns HTTP 503, causing the ingress controller to drop the container from active traffic routing until dependencies recover.

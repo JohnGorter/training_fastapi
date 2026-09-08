@@ -41,9 +41,10 @@ async def log(request: Request):
 
 Connect this function as a decorator dependency to the API endpoint. 
 
-Here is the code:
+Here is the code for the endoint:
 ```
-@app.post("/users/add", dependencies=[Depends(log)])
+@app.post("/users/add", dependencies=[Depends(log)]):
+    return {"user":"addded"}
 ```
 
 If you are done, run the project using

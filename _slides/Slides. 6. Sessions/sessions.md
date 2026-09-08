@@ -3,7 +3,27 @@
 ---
 ### Sessions
 
-To implememt sessions, we have the following high level steps to take
+Sessions persist client state across stateless HTTP requests
+
+In web architectures, session management is implemented either as 
+- client-side signed cookie state 
+- server-side session stores mapped to an opaque session identifier token
+
+---
+### Theoretical Background & Architecture Options
+
+|Criteria|Client-Side Signed Cookies (SessionMiddleware)|Server-Side Session Store (Redis + Session ID Cookie)|
+|----|----|----|
+|State Storage|Encrypted/signed payload stored inside browser cookie|Payload stored in server RAM (Redis); client holds 36-char UUID|
+|Payload Capacity|Max 4KB per domain (browser cookie spec limit)|Arbitrary size (megabytes of user state/cart data)|
+|Revocation Control|Hard to invalidate before cookie expiration without blacklist|Instant global revocation via server key deletion (redis.delete())|
+|Security Risk|Payload visible/decryptable if secret leaks|Low payload exposure; client holds only an opaque reference token|
+|Backend Overhead|Zero server RAM/DB overhead per active user|Requires fast, persistent key-value store (Redis/Memcached)|
+
+---
+### Sessions in fastAPI
+
+To implement sessions, we have the following high level steps to take
 - enable session middleware
 - Session Management => takes care of creating a random session string and validates sessions
 - Creating a Session Validation Dependency => a dependency that validates the expiration of sessions
@@ -13,7 +33,11 @@ To implememt sessions, we have the following high level steps to take
 ---
 ### Enable session middleware
 
-app.add_middleware(SessionMiddleware, secret_key="your-secret-key") enables HTTP session management in a Starlette or FastAPI application
+First we 
+```
+app.add_middleware(SessionMiddleware, secret_key="your-secret-key")
+```
+ enables HTTP session management in a Starlette or FastAPI application
 - intercepts every incoming HTTP request, reads or creates a signed session cookie
 - attaches a dictionary-like object to request.session that persists data across multiple HTTP requests for the same user
 
@@ -73,6 +97,18 @@ async def logout(request: Request):
     - always load secret_key from an environment variable in production (e.g., os.getenv("SECRET_KEY"))
     - never hardcode values like "your-secret-key"
 
+---
+### Essential Security Controls 
+
+For session cookies there are some security controls:
+- HttpOnly = True
+    - prevents client-side JavaScript (document.cookie) from accessing the cookie, mitigating Cross-Site Scripting (XSS) token theft.
+- SameSite = "Lax" / "Strict"
+    - restricts cookie transmission on cross-site requests, mitigating Cross-Site Request Forgery (CSRF) attacks.
+- Secure = True
+    - enforces cookie transmission exclusively over encrypted HTTPS connections.
+- Session Fixation Defense
+    - regenerates new session UUID tokens upon authentication state changes (e.g., login or privilege escalation)
 
 ---
 <!-- .slide: data-background="url('images/demo.jpg')" --> 

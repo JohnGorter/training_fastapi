@@ -100,11 +100,11 @@ FastAPI provides native support for OAuth2 using the OAuth2PasswordBearer scheme
 The flow involves exchanging user credentials for a signed JSON Web Token (JWT), which the client attaches to subsequent requests in the Authorization header
 
 ```
-┌────────┐               ┌─────────┐                ┌──────────┐
+┌────────┐                   ┌─────────┐                 ┌──────────┐
 │ Client │ ── POST /token ──>│ FastAPI │ ── Validates ──>│  Database│
 │        │ <── JWT Token ─── │         │                 └──────────┘
 │        │                   │         │
-│        │ ─ GET /protected ─>│         │ ── Decodes JWT ──> Decoded
+│        │ ─ GET /protected─>│         │ ── Decodes JWT ──> Decoded
 │        │   (Bearer Token)  │         │                    User Data
 └────────┘                   └─────────┘
 ```

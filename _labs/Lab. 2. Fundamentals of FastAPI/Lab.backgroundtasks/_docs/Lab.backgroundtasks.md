@@ -10,14 +10,14 @@ Make sure the project is created without package (--no-package) and the main.py 
 uv init --no-package lab_backgroundtasks
 ```
 
-Dont forget to add packages HTTPie, Pydantic, Pydantic[email], fastapi[standard] and aiosmpt to your project using uv add. 
+Dont forget to add packages HTTPie, Pydantic, Pydantic[email], fastapi[standard] and aiosmptd to your project using uv add. 
 
 ```
 uv add "fastapi[standard]"
 uv add pydantic
 uv add "pydantic[email]"
 uv add HTTPie
-uv add aiosmtp
+uv add aiosmtpd
 ```
 
 Copy over the all files from the _starter folder in this lab.

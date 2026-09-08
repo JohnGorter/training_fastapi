@@ -1,18 +1,19 @@
 import time
-from fastapi import FastAPI, BackgroundTasks
-from pydantic import EmailStr, BaseModel
+from fastapi import FastAPI, BackgroundTasks, status
+from pydantic import BaseModel, EmailStr
 
 app = FastAPI()
 
 def send_welcome_email(email: str):
     # Simulate slow SMTP network transmission
-    time.sleep(2.0)
+    time.sleep(10.0)
     print(f"[BACKGROUND] Welcome email sent successfully to {email}")
 
 class UserSignup(BaseModel):
     email: EmailStr
 
-@app.post("/signup", status_code=202)
+# http POST localhost:8000/signup email=hello@test.nl
+@app.post("/signup", status_code=status.HTTP_202_ACCEPTED)
 async def signup_user(
     payload: UserSignup, 
     background_tasks: BackgroundTasks
